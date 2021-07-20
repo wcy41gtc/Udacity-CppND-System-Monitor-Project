@@ -4,6 +4,8 @@
 #include <fstream>
 #include <regex>
 #include <string>
+#include <chrono>
+#include <thread>
 
 namespace LinuxParser {
 // Paths
