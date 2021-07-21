@@ -33,6 +33,7 @@ string LinuxParser::OperatingSystem() {
       }
     }
   }
+  filestream.close();
   return value;
 }
 
@@ -46,6 +47,7 @@ string LinuxParser::Kernel() {
     std::istringstream linestream(line);
     linestream >> os >> version >> kernel;
   }
+  stream.close();
   return kernel;
 }
 
@@ -106,6 +108,7 @@ long LinuxParser::UpTime() {
       TotSec = 0;
     }
   }
+  stream.close();
   return TotSec; 
 }
 
@@ -150,6 +153,7 @@ long LinuxParser::ActiveJiffies(int pid) {
   }catch(...){
     cstime_ = 0;
   }
+  stream.close();
   return (utime_ + stime_ + cutime_ + cstime_)/sysconf(_SC_CLK_TCK);
 }
 
@@ -181,6 +185,7 @@ vector<string> LinuxParser::CpuUtilization() {
       CpuUtil.push_back(value);
     }
   }
+  stream.close();
   return CpuUtil;
 }
 
@@ -194,12 +199,13 @@ int LinuxParser::TotalProcesses() {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
-        if (key == "processes") {
+        if (key == kProcesses) {
           return stoi(value);
         }
       }
     }
   }
+  filestream.close();
   return stoi(value);
 }
 
@@ -212,7 +218,7 @@ int LinuxParser::RunningProcesses() {  string line;
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
-        if (key == "procs_running") {
+        if (key == kProcessRunning) {
           return stoi(value);
         }
       }
@@ -248,12 +254,13 @@ string LinuxParser::Ram(int pid) {
     while (std::getline(stream, line)) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
-        if (key == "VmSize:") {
+        if (key == kMemKeyword) {
           return value = std::to_string(stol(value)/1024);
         }
       }
     }
   }
+  stream.close();
   return value;
 }
 
@@ -268,12 +275,13 @@ string LinuxParser::Uid(int pid) {
     while (std::getline(stream, line)) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
-        if (key == "Uid:") {
+        if (key == kUidKeyword) {
           return value;
         }
       }
     }
   }
+  stream.close();
   return value;
 }
 
@@ -293,6 +301,7 @@ string LinuxParser::User(int pid) {
       }
     }
   }
+  filestream.close();
   return key;
 }
 
